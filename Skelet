@@ -1,0 +1,298 @@
+/**
+ * @NApiVersion 2.x
+ * @NScriptType ClientScript
+ * @NModuleScope Public
+ */
+define(['N/ui/dialog', 'N/ui/message'],
+/**
+ * @param {dialog} dialog
+ * @param {message} message
+ */
+function(dialog, message) {
+    
+    /**
+     * Function to be executed after page is initialized.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.mode - The mode in which the record is being accessed (create, copy, or edit)
+     *
+     * @since 2015.2
+     */
+    function pageInit(scriptContext) {
+      
+      var objMessage = message.create({
+            title: 'This is WARNING',
+            message: 'This is our first Warning.',
+            type: message.Type.WARNING
+      });
+
+      objMessage.show({
+        duration: 5000
+      });
+
+    }
+
+    /**
+     * Function to be executed when field is changed.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     * @param {string} scriptContext.fieldId - Field name
+     * @param {number} scriptContext.lineNum - Line number. Will be undefined if not a sublist or matrix field
+     * @param {number} scriptContext.columnNum - Line number. Will be undefined if not a matrix field
+     *
+     * @since 2015.2
+     */
+    function fieldChanged(scriptContext) {
+      var stFieldId = scriptContext.fieldId;
+    	// Store current record into variable
+    	var recCurrentRecord = scriptContext.currentRecord;
+      
+    	
+    	// If industry field changed
+    	if(stFieldId == 'currency')
+		{
+          var stCurrencyValue = recCurrentRecord.getValue({
+    			fieldId : stFieldId});
+          if(stCurrencyValue == '4'){
+    		// Get value of industry type
+    	  var stCurrencyText = recCurrentRecord.getText({
+    			fieldId : stFieldId
+    		});
+    		// Show alert window
+    		dialog.alert({
+    			title: 'Currency type is EUR',
+    			message : 'Currency type is now '+stCurrencyText
+    		});    		
+    		
+		}}
+
+    }
+
+    /**
+     * Function to be executed when field is slaved.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     * @param {string} scriptContext.fieldId - Field name
+     *
+     * @since 2015.2
+     */
+    function postSourcing(scriptContext) {
+
+    }
+
+    /**
+     * Function to be executed after sublist is inserted, removed, or edited.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     *
+     * @since 2015.2
+     */
+    function sublistChanged(scriptContext) {
+
+    }
+
+    /**
+     * Function to be executed after line is selected.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     *
+     * @since 2015.2
+     */
+    function lineInit(scriptContext) {
+
+    }
+
+    /**
+     * Validation function to be executed when field is changed.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     * @param {string} scriptContext.fieldId - Field name
+     * @param {number} scriptContext.lineNum - Line number. Will be undefined if not a sublist or matrix field
+     * @param {number} scriptContext.columnNum - Line number. Will be undefined if not a matrix field
+     *
+     * @returns {boolean} Return true if field is valid
+     *
+     * @since 2015.2
+     */
+    function validateField(scriptContext) {
+		var stFieldId = scriptContext.fieldId;
+    	var recCurrentRecord = scriptContext.currentRecord;
+    	
+    	// if #PO changed
+    	if(stFieldId == 'memo')
+		{
+    		// Get value of #PO
+    		var stValue = recCurrentRecord.getValue({
+    			fieldId : 'memo'
+    		});
+    		
+    		// If empty
+    		if(stValue != '')
+    		{
+    			// Show message and prevent leaving the value
+        		alert('Invalid value - Memo must remain empty!');
+        				  
+    			return false;
+    		}
+    		else
+			{
+    			return true;
+			}
+		}
+      	else if (stFieldId == 'employee')
+        {
+         // Get value of Employee
+    		var stValue = recCurrentRecord.getValue({
+    			fieldId : 'employee'
+    		});
+    		
+    		// If 35
+    		if(stValue == '35')
+    		{
+              var stCurrencyText = recCurrentRecord.getText({
+    			fieldId : stFieldId
+    		});
+    			// Show message and prevent leaving the value
+        		alert('Employee ' + stCurrencyText + ' cannot raises PO due to high costs on her/his head in past!!!' );
+        				  
+    			return false;
+    		}
+    		else
+			{
+    			return true;
+			}
+        }
+    	else
+		{
+    		return true;
+		}
+    }
+
+    /**
+     * Validation function to be executed when sublist line is committed.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     *
+     * @returns {boolean} Return true if sublist line is valid
+     *
+     * @since 2015.2
+     */
+    function validateLine(scriptContext) {
+
+    }
+
+    /**
+     * Validation function to be executed when sublist line is inserted.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     *
+     * @returns {boolean} Return true if sublist line is valid
+     *
+     * @since 2015.2
+     */
+    function validateInsert(scriptContext) {
+
+    }
+
+    /**
+     * Validation function to be executed when record is deleted.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @param {string} scriptContext.sublistId - Sublist name
+     *
+     * @returns {boolean} Return true if sublist line is valid
+     *
+     * @since 2015.2
+     */
+    function validateDelete(scriptContext) {
+
+    }
+
+    /**
+     * Validation function to be executed when record is saved.
+     *
+     * @param {Object} scriptContext
+     * @param {Record} scriptContext.currentRecord - Current form record
+     * @returns {boolean} Return true if record is valid
+     *
+     * @since 2015.2
+     */
+    function saveRecord(scriptContext) {
+	var recCurrentRecord = scriptContext.currentRecord;
+    	
+    	// Get customer industry type
+    	var stIndType = recCurrentRecord.getValue({
+    		fieldId : 'currency'
+    	});
+    	
+    	// If government
+    	if(stIndType == '1')
+		{
+    		// show message
+        	var objMessage = message.create({
+                title: 'This is not acceptable!',
+                message: 'Saving PO with currency USD is not permitted by 434425',
+                type: message.Type.ERROR
+          });
+
+          objMessage.show({
+            duration: 5000
+          });
+          
+          // Prevent saving
+          return false;
+		}
+    	// IF Computer HW
+    	else if(stIndType == '4')
+		{
+    		// Show message
+        	var objMessage = message.create({
+                title: 'Department change!',
+                message: 'For Sales Orders regarding to currency EUR, department will be set to IT',
+                type: message.Type.WARNING
+          });
+
+          objMessage.show({
+            duration: 5000
+          });
+          
+          	// Set department to support
+    		recCurrentRecord.setValue({
+    			fieldId : 'department',
+    			value : '3'
+    		});
+		}
+    	
+    	return true;
+    }
+
+    return {
+        pageInit: pageInit,
+        fieldChanged: fieldChanged,
+//        postSourcing: postSourcing,
+//        sublistChanged: sublistChanged,
+//        lineInit: lineInit,
+        validateField: validateField,
+//        validateLine: validateLine,
+//        validateInsert: validateInsert,
+//        validateDelete: validateDelete,
+        saveRecord: saveRecord
+    };
+    
+});
